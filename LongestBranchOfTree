@@ -1,0 +1,197 @@
+package greatlearninglab3;
+
+import java.util.Scanner;
+
+public class LongestBranchOfTree {
+
+// BST node
+
+static class Node {
+
+int key, height;
+
+Node left, right;
+
+}
+
+// creation of new node
+
+static Node newNode(int data) {
+
+Node temp = new Node();
+
+temp.key = data;
+
+temp.height = 0;
+
+temp.left = null;
+
+temp.right = null;
+
+return temp;
+
+}
+
+public int getHeight(Node N) {
+
+if (N == null)
+
+return 0;
+
+return N.height;
+
+}
+
+public int findMax(int a, int b) {
+
+return (a > b) ? a : b;
+
+}
+
+public int getBalanceFactor(Node N) {
+
+if (N == null)
+
+return 0;
+
+return getHeight(N.left) - getHeight(N.right);
+
+}
+
+public Node insert(Node node, int key) {
+
+// create node
+
+if (node == null) {
+
+return (newNode(key));
+
+}
+
+if (key < node.key)
+
+node.left = insert(node.left, key);
+
+else if (key > node.key)
+
+node.right = insert(node.right, key);
+
+else { // Duplicate keys not allowed
+
+System.out.println("Cannot insert Duplicate values");
+
+return node;
+
+}
+
+node.height = 1 + findMax(getHeight(node.left), getHeight(node.right));
+
+return node;
+
+}
+
+public void Inorder(Node root) {
+
+if (root == null)
+
+return;
+
+else {
+
+Inorder(root.left);
+
+System.out.print(root.key + "{" + root.height + "} ");
+
+Inorder(root.right);
+
+}
+
+}
+
+public void PrintLongestBranch(Node root) {
+
+System.out.print(root.key+", ");
+
+if (root.left == null && root.right == null) {
+
+return;
+
+}
+
+if (root.left != null && root.right != null) {
+
+if (root.right.height > root.left.height) {
+
+PrintLongestBranch(root.right);
+
+} else if (root.left.height >= root.right.height) {
+
+PrintLongestBranch(root.left);
+
+}
+
+} else if (root.right != null) {
+
+PrintLongestBranch(root.right);
+
+} else {
+
+PrintLongestBranch(root.left);
+
+}
+
+}
+
+public static void main(String[] args) {
+
+Scanner sc = new Scanner(System.in);
+
+int value, num;
+
+LongestBranchOfTree longestBranchOfTree = new LongestBranchOfTree();
+
+System.out.println("Enter no of values: ");
+
+num = sc.nextInt();
+
+Node root = null;
+
+Node result = null;
+
+for (int i = 0; i < num; i++) {
+
+System.out.println("\nInsert value at " + (i + 1) + ": ");
+
+value = sc.nextInt();
+
+if (root == null) {
+
+root = longestBranchOfTree.insert(root, value);
+
+} else {
+
+result = longestBranchOfTree.insert(root, value);
+
+if (result.key == value)
+
+i -= 1;
+
+}
+
+System.out.println("Inorder of Binary Tree\n");
+
+longestBranchOfTree.Inorder(root);
+
+System.out.println();
+
+}
+
+System.out.println("\nNodes of Longest Branch");
+
+longestBranchOfTree.PrintLongestBranch(root);
+
+sc.close();
+
+}
+
+}
